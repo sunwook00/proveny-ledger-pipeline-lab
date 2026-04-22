@@ -1,0 +1,6 @@
+{
+    "ledgerEntryCount": 1,
+    "idempotencyKey": "ledger:psp-idem-0ec8de01-3dcb-4eda-951f-6ac5e7a75495:MINT:fixed",
+    "passportId": "psp-idem-0ec8de01-3dcb-4eda-951f-6ac5e7a75495",
+    "success": true
+}
