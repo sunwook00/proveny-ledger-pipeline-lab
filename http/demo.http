@@ -1,0 +1,11 @@
+### Mint
+POST http://localhost:8080/fake/products/mint
+Content-Type: application/json
+
+{"serialNumber":"SN-001"}
+
+### Publish once
+POST http://localhost:8080/outbox/publish-once?batchSize=10
+
+### Verify
+GET http://localhost:8080/ledgers/passports/{{passportId}}/verify

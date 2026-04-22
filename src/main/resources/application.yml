@@ -1,0 +1,39 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: proveny-ledger-pipeline-lab
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/proveny_lab}
+    username: ${DB_USERNAME:proveny}
+    password: ${DB_PASSWORD:proveny}
+    driver-class-name: org.postgresql.Driver
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      properties:
+        acks: all
+    consumer:
+      group-id: ledger-append-lab
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+outbox:
+  topic: ledger.outbox.v1
+  max-retries: 5
+  recovery-timeout-seconds: 180
+  recovery-interval-ms: 30000
