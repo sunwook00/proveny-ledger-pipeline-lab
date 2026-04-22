@@ -1,0 +1,7 @@
+{
+    "uniqueClaimed": 100,
+    "success": true,
+    "seeded": 100,
+    "claimedTotal": 100,
+    "duplicateClaimCount": 0
+}
