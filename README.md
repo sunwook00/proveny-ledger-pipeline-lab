@@ -81,7 +81,7 @@ curl http://localhost:8080/actuator/health
 | E2E Outbox → Kafka → Ledger → Verify | 완료 |
 | SKIP LOCKED 중복 claim 방지 | 완료 |
 | Consumer idempotency | 완료 |
-| payload 변조 감지 | 진행 예정 |
+| payload 변조 감지 | 완료 |
 | PROCESSING stuck 복구 | 진행 예정 |
 | Outbox 상태 지표 | 진행 예정 |
 
