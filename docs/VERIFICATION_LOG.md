@@ -19,7 +19,7 @@
 - [x] E2E Outbox -> Kafka -> Ledger -> Verify valid=true
 - [x] SKIP LOCKED duplicate claim prevention
 - [x] Consumer idempotency
-- [ ] Tamper detection valid=false
+- [x] Tamper detection valid=false
 - [ ] Recovery Scheduler stuck PROCESSING recovery
 - [ ] Outbox metrics
 
