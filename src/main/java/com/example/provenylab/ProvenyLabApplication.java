@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableKafka
 public class ProvenyLabApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(ProvenyLabApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(ProvenyLabApplication.class, args);
+  }
 }

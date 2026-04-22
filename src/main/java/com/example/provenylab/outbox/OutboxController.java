@@ -1,4 +1,36 @@
 package com.example.provenylab.outbox;
-import org.springframework.web.bind.annotation.*; import java.util.*;
+
+import java.util.*;
+import org.springframework.web.bind.annotation.*;
+
 @RestController
-public class OutboxController {private final OutboxPublisher publisher; private final OutboxRecoveryScheduler recovery; private final OutboxMetricsService metrics; public OutboxController(OutboxPublisher publisher,OutboxRecoveryScheduler recovery,OutboxMetricsService metrics){this.publisher=publisher;this.recovery=recovery;this.metrics=metrics;} @PostMapping("/outbox/publish-once") public List<Map<String,Object>> publishOnce(@RequestParam(defaultValue="pub-local") String publisherId,@RequestParam(defaultValue="20") int batchSize){return publisher.publishOnce(publisherId,batchSize);} @PostMapping("/outbox/recover") public Map<String,Object> recover(){List<Long> ids=recovery.recover();return Map.of("recoveredCount",ids.size(),"ids",ids);} @GetMapping("/outbox/metrics") public Map<String,Object> metrics(){return metrics.metrics();}}
+public class OutboxController {
+  private final OutboxPublisher publisher;
+  private final OutboxRecoveryScheduler recovery;
+  private final OutboxMetricsService metrics;
+
+  public OutboxController(
+      OutboxPublisher publisher, OutboxRecoveryScheduler recovery, OutboxMetricsService metrics) {
+    this.publisher = publisher;
+    this.recovery = recovery;
+    this.metrics = metrics;
+  }
+
+  @PostMapping("/outbox/publish-once")
+  public List<Map<String, Object>> publishOnce(
+      @RequestParam(defaultValue = "pub-local") String publisherId,
+      @RequestParam(defaultValue = "20") int batchSize) {
+    return publisher.publishOnce(publisherId, batchSize);
+  }
+
+  @PostMapping("/outbox/recover")
+  public Map<String, Object> recover() {
+    List<Long> ids = recovery.recover();
+    return Map.of("recoveredCount", ids.size(), "ids", ids);
+  }
+
+  @GetMapping("/outbox/metrics")
+  public Map<String, Object> metrics() {
+    return metrics.metrics();
+  }
+}

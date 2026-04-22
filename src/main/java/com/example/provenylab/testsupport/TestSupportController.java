@@ -1,4 +1,130 @@
 package com.example.provenylab.testsupport;
-import com.example.provenylab.ledger.*; import com.example.provenylab.outbox.*; import org.springframework.jdbc.core.JdbcTemplate; import org.springframework.web.bind.annotation.*; import java.time.Instant; import java.util.*; import java.util.concurrent.*; import java.util.stream.*;
-@RestController @RequestMapping("/test")
-public class TestSupportController {private final JdbcTemplate jdbc; private final OutboxClaimService claimService; private final LedgerAppendService appendService; public TestSupportController(JdbcTemplate jdbc,OutboxClaimService claimService,LedgerAppendService appendService){this.jdbc=jdbc;this.claimService=claimService;this.appendService=appendService;} @PostMapping("/skip-locked") public Map<String,Object> skipLocked(@RequestParam(defaultValue="100") int events,@RequestParam(defaultValue="2") int publishers,@RequestParam(defaultValue="60") int batchSize)throws Exception{String prefix="skip-"+UUID.randomUUID();for(int i=1;i<=events;i++){String aggregateId=prefix+"-"+i;jdbc.update("INSERT INTO outbox_event(aggregate_id,aggregate_type,event_type,payload,idempotency_key,status) VALUES (?,'PASSPORT','MINT',?::jsonb,?,'PENDING')",aggregateId,"{\"passportId\":\""+aggregateId+"\",\"payload\":{}}","ledger:"+aggregateId+":MINT");}ExecutorService pool=Executors.newFixedThreadPool(publishers);List<Future<List<Long>>> futures=IntStream.rangeClosed(1,publishers).mapToObj(i->pool.submit(()->claimService.claim("pub-"+i,batchSize).stream().map(OutboxRow::id).collect(Collectors.toList()))).toList();List<Long> all=new ArrayList<>();for(Future<List<Long>> f:futures)all.addAll(f.get(10,TimeUnit.SECONDS));pool.shutdownNow();Set<Long> unique=new HashSet<>(all);return Map.of("seeded",events,"claimedTotal",all.size(),"uniqueClaimed",unique.size(),"duplicateClaimCount",all.size()-unique.size(),"success",all.size()==unique.size());} @PostMapping("/idempotency") public Map<String,Object> idempotency(){String passportId="psp-idem-"+UUID.randomUUID();String key="ledger:"+passportId+":MINT:fixed";LedgerEvent event=new LedgerEvent(passportId,"OWNERSHIP","MINT","BRAND","demo-actor",Instant.now(),Map.of("passportId",passportId,"serialNumber","IDEM-1"),key,1);appendService.append(event);appendService.append(event);Integer count=jdbc.queryForObject("SELECT count(*) FROM ledger_entry WHERE idempotency_key=?",Integer.class,key);return Map.of("passportId",passportId,"idempotencyKey",key,"ledgerEntryCount",count,"success",count!=null&&count==1);} @PostMapping("/make-stuck-processing") public Map<String,Object> makeStuckProcessing(){int updated=jdbc.update("UPDATE outbox_event SET status='PROCESSING', processing_owner='crashed-publisher', processing_started_at=now() - interval '10 minutes' WHERE id=(SELECT id FROM outbox_event WHERE status='PENDING' ORDER BY id LIMIT 1)");return Map.of("updated",updated,"message","Run POST /outbox/recover");} @PostMapping("/replay-outbox/{id}") public Map<String,Object> replayOutbox(@PathVariable long id){String payload=jdbc.queryForObject("SELECT payload::text FROM outbox_event WHERE id=?",String.class,id);appendService.append(appendService.fromOutboxPayload(payload));appendService.append(appendService.fromOutboxPayload(payload));String key=jdbc.queryForObject("SELECT idempotency_key FROM outbox_event WHERE id=?",String.class,id);Integer count=jdbc.queryForObject("SELECT count(*) FROM ledger_entry WHERE idempotency_key=?",Integer.class,key);return Map.of("outboxId",id,"idempotencyKey",key,"ledgerEntryCount",count,"success",count!=null&&count==1);} }
+
+import com.example.provenylab.ledger.*;
+import com.example.provenylab.outbox.*;
+import java.time.Instant;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.stream.*;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/test")
+public class TestSupportController {
+  private final JdbcTemplate jdbc;
+  private final OutboxClaimService claimService;
+  private final LedgerAppendService appendService;
+
+  public TestSupportController(
+      JdbcTemplate jdbc, OutboxClaimService claimService, LedgerAppendService appendService) {
+    this.jdbc = jdbc;
+    this.claimService = claimService;
+    this.appendService = appendService;
+  }
+
+  @PostMapping("/skip-locked")
+  public Map<String, Object> skipLocked(
+      @RequestParam(defaultValue = "100") int events,
+      @RequestParam(defaultValue = "2") int publishers,
+      @RequestParam(defaultValue = "60") int batchSize)
+      throws Exception {
+    String prefix = "skip-" + UUID.randomUUID();
+    for (int i = 1; i <= events; i++) {
+      String aggregateId = prefix + "-" + i;
+      jdbc.update(
+          "INSERT INTO outbox_event(aggregate_id,aggregate_type,event_type,payload,idempotency_key,status) VALUES (?,'PASSPORT','MINT',?::jsonb,?,'PENDING')",
+          aggregateId,
+          "{\"passportId\":\"" + aggregateId + "\",\"payload\":{}}",
+          "ledger:" + aggregateId + ":MINT");
+    }
+    ExecutorService pool = Executors.newFixedThreadPool(publishers);
+    List<Future<List<Long>>> futures =
+        IntStream.rangeClosed(1, publishers)
+            .mapToObj(
+                i ->
+                    pool.submit(
+                        () ->
+                            claimService.claim("pub-" + i, batchSize).stream()
+                                .map(OutboxRow::id)
+                                .collect(Collectors.toList())))
+            .toList();
+    List<Long> all = new ArrayList<>();
+    for (Future<List<Long>> f : futures) all.addAll(f.get(10, TimeUnit.SECONDS));
+    pool.shutdownNow();
+    Set<Long> unique = new HashSet<>(all);
+    return Map.of(
+        "seeded",
+        events,
+        "claimedTotal",
+        all.size(),
+        "uniqueClaimed",
+        unique.size(),
+        "duplicateClaimCount",
+        all.size() - unique.size(),
+        "success",
+        all.size() == unique.size());
+  }
+
+  @PostMapping("/idempotency")
+  public Map<String, Object> idempotency() {
+    String passportId = "psp-idem-" + UUID.randomUUID();
+    String key = "ledger:" + passportId + ":MINT:fixed";
+    LedgerEvent event =
+        new LedgerEvent(
+            passportId,
+            "OWNERSHIP",
+            "MINT",
+            "BRAND",
+            "demo-actor",
+            Instant.now(),
+            Map.of("passportId", passportId, "serialNumber", "IDEM-1"),
+            key,
+            1);
+    appendService.append(event);
+    appendService.append(event);
+    Integer count =
+        jdbc.queryForObject(
+            "SELECT count(*) FROM ledger_entry WHERE idempotency_key=?", Integer.class, key);
+    return Map.of(
+        "passportId",
+        passportId,
+        "idempotencyKey",
+        key,
+        "ledgerEntryCount",
+        count,
+        "success",
+        count != null && count == 1);
+  }
+
+  @PostMapping("/make-stuck-processing")
+  public Map<String, Object> makeStuckProcessing() {
+    int updated =
+        jdbc.update(
+            "UPDATE outbox_event SET status='PROCESSING', processing_owner='crashed-publisher', processing_started_at=now() - interval '10 minutes' WHERE id=(SELECT id FROM outbox_event WHERE status='PENDING' ORDER BY id LIMIT 1)");
+    return Map.of("updated", updated, "message", "Run POST /outbox/recover");
+  }
+
+  @PostMapping("/replay-outbox/{id}")
+  public Map<String, Object> replayOutbox(@PathVariable long id) {
+    String payload =
+        jdbc.queryForObject("SELECT payload::text FROM outbox_event WHERE id=?", String.class, id);
+    appendService.append(appendService.fromOutboxPayload(payload));
+    appendService.append(appendService.fromOutboxPayload(payload));
+    String key =
+        jdbc.queryForObject(
+            "SELECT idempotency_key FROM outbox_event WHERE id=?", String.class, id);
+    Integer count =
+        jdbc.queryForObject(
+            "SELECT count(*) FROM ledger_entry WHERE idempotency_key=?", Integer.class, key);
+    return Map.of(
+        "outboxId",
+        id,
+        "idempotencyKey",
+        key,
+        "ledgerEntryCount",
+        count,
+        "success",
+        count != null && count == 1);
+  }
+}

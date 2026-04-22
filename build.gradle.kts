@@ -1,4 +1,5 @@
 plugins {
+    id("com.diffplug.spotless") version "8.4.0"
     java
     id("org.springframework.boot") version "3.3.5"
     id("io.spring.dependency-management") version "1.1.6"
@@ -21,3 +22,38 @@ dependencies {
 }
 
 tasks.withType<Test> { useJUnitPlatform() }
+
+spotless {
+    java {
+        target("src/**/*.java")
+        googleJavaFormat("1.35.0")
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+
+
+    format("gradleKts") {
+        target("*.gradle.kts")
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+
+    format("misc") {
+        target(
+            "*.md",
+            ".gitignore",
+            ".gitattributes",
+            ".editorconfig",
+            "docs/**/*.md",
+            "http/**/*.http",
+            "sql/**/*.sql",
+            "scripts/*.sh",
+            "compose.yaml",
+            "src/main/resources/**/*.yml",
+            "src/main/resources/**/*.yaml"
+        )
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+}
