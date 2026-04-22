@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 BASE=${BASE:-http://localhost:8080}
-json_get(){ python3 -c "import json,sys; print(json.load(sys.stdin)['$1'])"; }
+json_get() { python3 -c "import json,sys; print(json.load(sys.stdin)['$1'])"; }
 SERIAL="SN-$(date +%s)"
 MINT=$(curl -s -X POST "$BASE/fake/products/mint" -H 'Content-Type: application/json' -d "{\"serialNumber\":\"$SERIAL\"}")
 echo "$MINT" | python3 -m json.tool

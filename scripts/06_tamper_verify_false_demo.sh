@@ -34,8 +34,8 @@ TOTAL=0
 for i in $(seq 1 10); do
   echo "publish attempt=$i"
 
-  curl -s -X POST "$BASE/outbox/publish-once?publisherId=tamper-demo&batchSize=200" \
-    | python3 -m json.tool || true
+  curl -s -X POST "$BASE/outbox/publish-once?publisherId=tamper-demo&batchSize=200" |
+    python3 -m json.tool || true
 
   sleep 2
 
