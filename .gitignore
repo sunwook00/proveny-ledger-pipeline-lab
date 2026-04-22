@@ -9,3 +9,29 @@ build/
 logs/
 *.log
 app.log
+
+# Local build/cache
+.gradle/
+build/
+out/
+.DS_Store
+
+# Logs
+*.log
+
+# Keep verification evidence
+!docs/verification/*.txt
+!docs/verification/*.md
+
+# Local build/cache
+.gradle/
+build/
+out/
+.DS_Store
+
+# Logs
+*.log
+
+# Keep verification evidence
+!docs/verification/*.txt
+!docs/verification/*.md

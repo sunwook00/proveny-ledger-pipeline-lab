@@ -74,7 +74,7 @@ Publisher가 이벤트를 PROCESSING으로 바꾼 뒤 Kafka 발행 전에 죽으
 
 Recovery Scheduler는 timeout을 넘긴 PROCESSING row를 다시 PENDING으로 복구합니다.
 
-재발행으로 인한 중복 가능성은 Consumer idempotency로 방어합니다.
+재발행으로 인한 중복 가능성은 Consumer idempotency로 처리합니다.
 
 ## 8. Metrics
 
