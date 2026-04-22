@@ -1,0 +1,72 @@
+{
+    "serialNumber": "SN-1776864698",
+    "ledgerStatus": "PENDING",
+    "passportId": "psp-a24c8790-2058-45f7-b93d-032a69dc0067"
+}
+[
+    {
+        "publishDurationMs": 15,
+        "id": 3,
+        "status": "PUBLISHED"
+    }
+]
+{
+    "passportId": "psp-a24c8790-2058-45f7-b93d-032a69dc0067",
+    "valid": true,
+    "invalidAtSeq": null,
+    "reason": null,
+    "totalEntries": 1
+}
+{
+    "toOwnerId": "user-2",
+    "ledgerStatus": "PENDING",
+    "passportId": "psp-a24c8790-2058-45f7-b93d-032a69dc0067"
+}
+[
+    {
+        "publishDurationMs": 5,
+        "id": 4,
+        "status": "PUBLISHED"
+    }
+]
+[
+    {
+        "ledgerId": "led-a9be8279-eff8-44f3-8e3a-57bedd514a37",
+        "passportId": "psp-a24c8790-2058-45f7-b93d-032a69dc0067",
+        "seq": 1,
+        "eventCategory": "OWNERSHIP",
+        "eventAction": "MINT",
+        "actorRole": "BRAND",
+        "actorId": "demo-actor",
+        "occurredAt": "2026-04-22T13:31:38.176205Z",
+        "payloadJson": "{\"passportId\": \"psp-a24c8790-2058-45f7-b93d-032a69dc0067\", \"eventAction\": \"MINT\", \"serialNumber\": \"SN-1776864698\"}",
+        "payloadCanonical": "{\"eventAction\":\"MINT\",\"passportId\":\"psp-a24c8790-2058-45f7-b93d-032a69dc0067\",\"serialNumber\":\"SN-1776864698\"}",
+        "dataHash": "26dc87fc56bcfd65195cc6f064cbed53ba4e1f17838f8aa4ec8e0c8783849f3b",
+        "prevHash": null,
+        "entryHash": "7806471434651b28028de2482516233705d43a7258051434ee13a4670577692d",
+        "idempotencyKey": "ledger:psp-a24c8790-2058-45f7-b93d-032a69dc0067:MINT"
+    },
+    {
+        "ledgerId": "led-96f5b7b8-6b96-4f5a-9710-58f2fc2906a0",
+        "passportId": "psp-a24c8790-2058-45f7-b93d-032a69dc0067",
+        "seq": 2,
+        "eventCategory": "OWNERSHIP",
+        "eventAction": "TRANSFER_COMPLETED",
+        "actorRole": "BRAND",
+        "actorId": "demo-actor",
+        "occurredAt": "2026-04-22T13:31:41.414874Z",
+        "payloadJson": "{\"toOwnerId\": \"user-2\", \"passportId\": \"psp-a24c8790-2058-45f7-b93d-032a69dc0067\", \"eventAction\": \"TRANSFER_COMPLETED\"}",
+        "payloadCanonical": "{\"eventAction\":\"TRANSFER_COMPLETED\",\"passportId\":\"psp-a24c8790-2058-45f7-b93d-032a69dc0067\",\"toOwnerId\":\"user-2\"}",
+        "dataHash": "a6ad17de552dbc9dcfa1fe5e44647ffa1dbd7309771b4b627d37ba714a986e85",
+        "prevHash": "7806471434651b28028de2482516233705d43a7258051434ee13a4670577692d",
+        "entryHash": "232722f5c8829301e5db809afbf7ecae4b052463fe9543c4ea04a5bf9c9fe8b7",
+        "idempotencyKey": "ledger:psp-a24c8790-2058-45f7-b93d-032a69dc0067:TRANSFER:4a958360-d547-4aa7-8946-1dbcbdfc9698"
+    }
+]
+{
+    "passportId": "psp-a24c8790-2058-45f7-b93d-032a69dc0067",
+    "valid": true,
+    "invalidAtSeq": null,
+    "reason": null,
+    "totalEntries": 2
+}
