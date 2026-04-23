@@ -20,8 +20,8 @@
 - [x] SKIP LOCKED duplicate claim prevention
 - [x] Consumer idempotency
 - [x] Tamper detection valid=false
-- [ ] Recovery Scheduler stuck PROCESSING recovery
-- [ ] Outbox metrics
+- [x] Recovery Scheduler stuck PROCESSING recovery
+- [x] Outbox metrics
 
 ## 검증 로그
 

@@ -82,8 +82,8 @@ curl http://localhost:8080/actuator/health
 | SKIP LOCKED 중복 claim 방지 | 완료 |
 | Consumer idempotency | 완료 |
 | payload 변조 감지 | 완료 |
-| PROCESSING stuck 복구 | 진행 예정 |
-| Outbox 상태 지표 | 진행 예정 |
+| PROCESSING stuck 복구 | 완료 |
+| Outbox 상태 지표 | 완료 |
 
 검증 로그는 `docs/verification` 디렉토리에 남깁니다.
 
