@@ -1,0 +1,13 @@
+{
+    "pending.size": 0.0,
+    "processing.count": 0.0,
+    "published.count": 108.0,
+    "failed.count": 0.0,
+    "oldest.age.seconds": 0.0,
+    "status.distribution": [
+        {
+            "status": "PUBLISHED",
+            "count": 108
+        }
+    ]
+}
