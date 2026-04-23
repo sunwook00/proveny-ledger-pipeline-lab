@@ -1,0 +1,17 @@
+{
+    "pending.size": 1.0,
+    "processing.count": 0.0,
+    "published.count": 107.0,
+    "failed.count": 0.0,
+    "oldest.age.seconds": 752.394717,
+    "status.distribution": [
+        {
+            "status": "PENDING",
+            "count": 1
+        },
+        {
+            "status": "PUBLISHED",
+            "count": 107
+        }
+    ]
+}
