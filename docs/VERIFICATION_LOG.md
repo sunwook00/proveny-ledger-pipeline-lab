@@ -22,7 +22,7 @@
 - [x] Tamper detection valid=false
 - [x] Recovery Scheduler stuck PROCESSING recovery
 - [x] Outbox metrics
-
+- [x] Fresh clone smoke test
 ## 검증 로그
 
 | 항목 | 파일 |
@@ -33,7 +33,7 @@
 | payload 변조 감지 | `docs/verification/04_tamper_verify_false.txt` |
 | PROCESSING stuck 복구 | `docs/verification/05_recovery_stuck_processing.txt` |
 | Outbox 상태 지표 | `docs/verification/06_outbox_metrics.txt` |
-
+| Fresh clone smoke test | `docs/verification/07_fresh_clone_smoke.md` |
 ## 요약
 
 이 repo에서는 Product/Workflow 전체를 구현하지 않고, 원장 기록 신뢰성과 관련된 최소 흐름만 재현했습니다.

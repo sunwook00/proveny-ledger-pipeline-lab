@@ -84,7 +84,7 @@ curl http://localhost:8080/actuator/health
 | payload 변조 감지 | 완료 |
 | PROCESSING stuck 복구 | 완료 |
 | Outbox 상태 지표 | 완료 |
-
+| Fresh clone smoke test | 완료 |
 검증 로그는 `docs/verification` 디렉토리에 남깁니다.
 
 ## 핵심 확인 파일
