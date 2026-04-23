@@ -1,0 +1,49 @@
+{
+    "serialNumber": "RECOVERY-1776929477",
+    "ledgerStatus": "PENDING",
+    "passportId": "psp-d2eb8196-fe21-4fae-a9e0-dae4e87b9b01"
+}
+{
+    "updated": 1,
+    "message": "Run POST /outbox/recover"
+}
+{
+    "pending.size": 0.0,
+    "processing.count": 1.0,
+    "published.count": 107.0,
+    "failed.count": 0.0,
+    "oldest.age.seconds": 0.0,
+    "status.distribution": [
+        {
+            "status": "PROCESSING",
+            "count": 1
+        },
+        {
+            "status": "PUBLISHED",
+            "count": 107
+        }
+    ]
+}
+{
+    "ids": [
+        108
+    ],
+    "recoveredCount": 1
+}
+{
+    "pending.size": 1.0,
+    "processing.count": 0.0,
+    "published.count": 107.0,
+    "failed.count": 0.0,
+    "oldest.age.seconds": 0.145745,
+    "status.distribution": [
+        {
+            "status": "PENDING",
+            "count": 1
+        },
+        {
+            "status": "PUBLISHED",
+            "count": 107
+        }
+    ]
+}
