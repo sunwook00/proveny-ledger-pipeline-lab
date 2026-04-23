@@ -7,26 +7,26 @@ echo "==> Starting PostgreSQL and Kafka"
 docker compose -f compose.yaml up -d
 
 echo "==> Waiting for PostgreSQL"
-until docker exec proveny-lab-postgres pg_isready -U proveny -d proveny_lab >/dev/null 2>&1; do
+until docker compose -f compose.yaml exec -T postgres pg_isready -U proveny -d proveny_lab >/dev/null 2>&1; do
   echo "waiting postgres..."
   sleep 2
 done
 
 echo "==> Waiting for Kafka"
-until docker exec proveny-lab-kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list >/dev/null 2>&1; do
+until docker compose -f compose.yaml exec -T kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list >/dev/null 2>&1; do
   echo "waiting kafka..."
   sleep 3
 done
 
 echo "==> Creating Kafka topics"
-docker exec proveny-lab-kafka /opt/kafka/bin/kafka-topics.sh \
+docker compose -f compose.yaml exec -T kafka /opt/kafka/bin/kafka-topics.sh \
   --bootstrap-server localhost:9092 \
   --create --if-not-exists \
   --topic ledger.outbox.v1 \
   --partitions 3 \
   --replication-factor 1 >/dev/null
 
-docker exec proveny-lab-kafka /opt/kafka/bin/kafka-topics.sh \
+docker compose -f compose.yaml exec -T kafka /opt/kafka/bin/kafka-topics.sh \
   --bootstrap-server localhost:9092 \
   --create --if-not-exists \
   --topic ledger.outbox.v1.dlq \
@@ -34,7 +34,7 @@ docker exec proveny-lab-kafka /opt/kafka/bin/kafka-topics.sh \
   --replication-factor 1 >/dev/null
 
 echo "==> Kafka topics"
-docker exec proveny-lab-kafka /opt/kafka/bin/kafka-topics.sh \
+docker compose -f compose.yaml exec -T kafka /opt/kafka/bin/kafka-topics.sh \
   --bootstrap-server localhost:9092 \
   --list
 

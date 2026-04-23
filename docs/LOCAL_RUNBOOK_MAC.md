@@ -20,13 +20,13 @@ docker compose -f compose.yaml ps
 ## 3. Check PostgreSQL
 
 ```bash
-docker exec proveny-lab-postgres psql -U proveny -d proveny_lab -c "select now();"
+docker compose -f compose.yaml exec -T postgres psql -U proveny -d proveny_lab -c "select now();"
 ```
 
 ## 4. Check Kafka Topics
 
 ```bash
-docker exec proveny-lab-kafka /opt/kafka/bin/kafka-topics.sh \
+docker compose -f compose.yaml exec -T kafka /opt/kafka/bin/kafka-topics.sh \
   --bootstrap-server localhost:9092 \
   --list
 ```
@@ -65,3 +65,15 @@ Expected result:
 ./scripts/07_recovery_demo.sh
 ./scripts/08_metrics_demo.sh
 ```
+POSTGRES_PORT=55432 KAFKA_PORT=19092 docker compose -f compose.yaml up -d
+DB_URL=jdbc:postgresql://localhost:55432/proveny_lab \
+KAFKA_BOOTSTRAP_SERVERS=localhost:19092 \
+SERVER_PORT=18080 \
+./gradlew bootRun
+curl http://localhost:18080/actuator/health
+BASE=http://localhost:18080 ./scripts/03_demo_e2e.sh
+BASE=http://localhost:18080 ./scripts/04_skip_locked_demo.sh
+BASE=http://localhost:18080 ./scripts/05_idempotency_demo.sh
+BASE=http://localhost:18080 ./scripts/06_tamper_verify_false_demo.sh
+BASE=http://localhost:18080 ./scripts/07_recovery_demo.sh
+BASE=http://localhost:18080 ./scripts/08_metrics_demo.sh
